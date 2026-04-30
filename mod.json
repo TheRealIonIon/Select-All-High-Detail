@@ -7,21 +7,13 @@
         "ios": "2.2081"
     },
     "version": "1.0.0",
-    "id": "malikhw47.smth",
-    "name": "nam",
+    "id": "malikhw47.selallhdm",
+    "name": "Select All HDM",
     "developer": "MalikHw47",
-    "description": "desc.",
-    "tags": ["yes", "yeah"],
+    "description": "Selects all High Detail Mode objects in the working level.",
+    "tags": ["editor", "utility"],
     "links": {
-        "source": "https://github.com/MalikHw/geode-template",
+        "source": "https://github.com/MalikHw/Select-All-HDM",
         "community": "https://discord.gg/G9bZ92eg2n"
-    },
-    "settings": {},
-    "suggested": [
-        {
-            "id": "something",
-            "importance": "recommended",
-            "reason": "n"
-        }
-    ]
+    }
 }
