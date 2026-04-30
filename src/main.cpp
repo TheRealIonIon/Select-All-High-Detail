@@ -22,7 +22,7 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
         
         if (auto m = this->getChildByID("small-actions-menu")) {
             auto spr = ButtonSprite::create("Select All\nHigh Detail", "bigFont.fnt", "GJ_button_04.png");
-            spr->setScale(0.55f);
+            spr->setScale(0.22f);
             
             auto b = CCMenuItemSpriteExtra::create(
                 spr, nullptr, this, menu_selector(MyEditorPauseLayer::onSelectHDM)
