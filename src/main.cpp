@@ -20,16 +20,20 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
     bool init(LevelEditorLayer* l) {
         if (!EditorPauseLayer::init(l)) return false;
         
-        if (auto m = this->getChildByID("small-actions-menu")) {
+        if (auto m = this->getChildByID("actions-menu")) {
             auto spr = ButtonSprite::create("Select All\nHigh Detail", "bigFont.fnt", "GJ_button_04.png");
-            spr->setScale(0.22f);
+            spr->setScale(0.55f);
             
             auto b = CCMenuItemSpriteExtra::create(
                 spr, nullptr, this, menu_selector(MyEditorPauseLayer::onSelectHDM)
             );
             b->setID("select-all-hdm-btn");
             
-            m->insertBefore(b, nullptr);
+            if (auto buildHelper = m->getChildByID("build-helper-button")) {
+                m->insertBefore(b, buildHelper);
+            } else {
+                m->addChild(b);
+            }
             m->updateLayout();
         }
         return true;
