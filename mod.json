@@ -6,7 +6,7 @@
         "android": "2.2081",
         "ios": "2.2081"
     },
-    "version": "1.0.0",
+    "version": "1.0.1",
     "id": "malikhw47.select-all-hdm",
     "name": "Select All High Detail",
     "developer": "MalikHw47",
@@ -15,5 +15,8 @@
     "links": {
         "source": "https://github.com/MalikHw/FuckHighDetail",
         "community": "https://discord.gg/G9bZ92eg2n"
+    },
+    "dependencies": {
+        "geode.node-ids": ">=v1.0.0"
     }
 }
