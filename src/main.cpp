@@ -11,7 +11,7 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
         auto ui = editor->m_editorUI;
         auto objs = CCArray::create();
         for (auto obj : CCArrayExt<GameObject*>(editor->m_objects)) {
-            if (obj->m_highDetail) objs->addObject(obj);
+            if (obj->m_isHighDetail) objs->addObject(obj);  // Changed here
         }
         ui->deselectAll();
         ui->selectObjects(objs, true);
