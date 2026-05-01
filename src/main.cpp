@@ -23,11 +23,11 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
             ui->selectObjects(objs, true);
             
             Notification::create(
-                fmt::format("Selected {} HD objects", objs->count()),
+                fmt::format("Selected {} High Detail objects", objs->count()),
                 NotificationIcon::Info
             )->show();
         } else {
-            Notification::create("No HD objects found", NotificationIcon::Error)->show();
+            Notification::create("No High Detail objects found", NotificationIcon::Error)->show();
         }
     }
 
