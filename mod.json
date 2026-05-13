@@ -6,7 +6,7 @@
         "android": "2.2081",
         "ios": "2.2081"
     },
-    "version": "1.0.2",
+    "version": "1.0.3",
     "id": "malikhw47.select-all-hdm",
     "name": "Select All High Detail",
     "developer": "MalikHw47",
@@ -18,5 +18,10 @@
     },
     "dependencies": {
         "geode.node-ids": ">=v1.0.0"
+    },
+    "resources": {
+        "sprites": [
+            "prev/*.png"
+        ]
     }
 }
