@@ -11,4 +11,4 @@ Clicking this button will select all High Detail Mode objects in the working lev
 - [TheRealIonIon](https://github.com/TheRealIonIon) - Notifications + button design + bug fixes
 
 # Preview
-![image](https://github.com/TheRealIonIon/Select-All-High-Detail/blob/31ccaa929ad3112d6b862a0ad474a2b69e1e8a32/prev.png)
+![image](https://github.com/TheRealIonIon/Select-All-High-Detail/blob/b153c527b6aec61225b4ec42500ae291017c190a/prev/prev.png)
