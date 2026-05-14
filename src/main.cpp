@@ -4,7 +4,6 @@
 using namespace geode::prelude;
 
 class $modify(MyEditorPauseLayer, EditorPauseLayer) {
-    
     void onSelectHDM(CCObject* sender) {
         auto editor = LevelEditorLayer::get();
         if (!editor || !editor->m_editorUI) return;
@@ -13,21 +12,40 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
         auto objs = CCArray::create();
 
         for (auto obj : CCArrayExt<GameObject*>(editor->m_objects)) {
-            if (obj->m_isHighDetail) {
-                objs->addObject(obj);
-            }
+            if (obj->m_isHighDetail) objs->addObject(obj);
         }
 
-        if (objs->count() > 0) {
+        auto cnt = objs->count();
+        std::string str = "object";
+        if (cnt > 1) str += "s";
+
+        if (cnt > 0) {
+            auto prev = CCArray::create();
+
+            if (ui->m_selectedObjects) prev->addObjectsFromArray(ui->m_selectedObjects);
+            else if (ui->m_selectedObject) prev->addObject(ui->m_selectedObject);
+
+            if (auto undo = UndoObject::create(nullptr, UndoCommand::Select)) {
+                if (!undo->m_objects) {
+                    undo->m_objects = CCArray::create();
+                    undo->m_objects->retain();
+                }
+
+                undo->m_objects->addObjectsFromArray(prev);
+                editor->m_undoObjects->addObject(undo);
+            }
+
             ui->deselectAll();
             ui->selectObjects(objs, true);
-            
+            ui->updateButtons();
+            ui->updateDeleteButtons();
+
             Notification::create(
-                fmt::format("Selected {} High Detail objects", objs->count()),
-                NotificationIcon::Info
+                fmt::format("Selected {} HD {}", cnt, str),
+                NotificationIcon::Success
             )->show();
         } else {
-            Notification::create("No High Detail objects found", NotificationIcon::Error)->show();
+            Notification::create("No HD objects found", NotificationIcon::Error)->show();
         }
     }
 
@@ -35,15 +53,25 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
         if (!EditorPauseLayer::init(lel)) return false;
 
         if (auto menu = this->getChildByID("actions-menu")) {
-            auto spr = ButtonSprite::create(
+            auto spr = CCNode::create();
+            spr->setContentSize({56, 24});
+
+            auto label = CCLabelBMFont::create(
                 "Select All\nHigh Detail",
-                38,
-                true, 
-                "bigFont.fnt",
-                "GJ_button_04.png",
-                24,
-                0.75f
+                "bigFont.fnt"
             );
+
+            label->setScale(0.25f);
+            label->setAnchorPoint({0.5f, 0.5f});
+            label->setPosition(spr->getContentSize() / 2 + ccp(0.5f, 1.0f));
+            spr->addChild(label);
+
+            auto bg = CCScale9Sprite::create("GJ_button_04.png");
+            bg->setContentSize({66, 30});
+            bg->setAnchorPoint({0.5f, 0.5f});
+            bg->setScale(0.81f);
+            bg->setPosition(spr->getContentSize() / 2);
+            spr->addChild(bg, -1);
 
             auto btn = CCMenuItemSpriteExtra::create(
                 spr,
@@ -52,14 +80,9 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
                 menu_selector(MyEditorPauseLayer::onSelectHDM)
             );
 
+            auto build = menu->getChildByID("build-helper-button");
             btn->setID("select-all-hdm-btn");
-
-            if (auto buildHelper = menu->getChildByID("build-helper-button")) {
-                menu->insertBefore(btn, buildHelper);
-            } else {
-                menu->addChild(btn);
-            }
-
+            menu->insertBefore(btn, build);
             menu->updateLayout();
         }
 
