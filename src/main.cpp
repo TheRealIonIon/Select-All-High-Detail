@@ -22,8 +22,9 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
         if (cnt > 0) {
             auto prev = CCArray::create();
 
-            if (ui->m_selectedObjects) prev->addObjectsFromArray(ui->m_selectedObjects);
-            else if (ui->m_selectedObject) prev->addObject(ui->m_selectedObject);
+            if (ui->m_selectedObjects && ui->m_selectedObjects->count() > 0) {
+                prev->addObjectsFromArray(ui->m_selectedObjects);
+            } else if (ui->m_selectedObject) prev->addObject(ui->m_selectedObject);
 
             if (auto undo = UndoObject::create(nullptr, UndoCommand::Select)) {
                 if (!undo->m_objects) {
@@ -53,8 +54,9 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
         if (!EditorPauseLayer::init(lel)) return false;
 
         if (auto menu = this->getChildByID("actions-menu")) {
-            auto spr = CCNode::create();
+            auto spr = ButtonSprite::create("");
             spr->setContentSize({56, 24});
+            spr->removeAllChildren();
 
             auto label = CCLabelBMFont::create(
                 "Select All\nHigh Detail",
