@@ -9,7 +9,7 @@
     "version": "1.0.4",
     "id": "malikhw47.select-all-hdm",
     "name": "Select All High Detail",
-    "developer": "MalikHw47",
+    "developers": ["MalikHw47", "TheRealIonIon"],
     "description": "Selects all High Detail Mode objects in the working level.",
     "tags": ["editor", "utility"],
     "links": {
