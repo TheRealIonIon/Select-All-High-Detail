@@ -1,27 +1,38 @@
 {
-    "geode": "5.7.0",
+    "geode": "6.0.0-beta.1",
     "gd": {
-        "win": "2.2081",
-        "mac": "2.2081",
-        "android": "2.2081",
-        "ios": "2.2081"
+        "win": "2.2091",
+        "mac": "2.2091",
+        "android": "2.2091",
+        "ios": "2.2091"
     },
-    "version": "1.0.4",
+    "version": "1.0.5",
     "id": "malikhw47.select-all-hdm",
     "name": "Select All High Detail",
-    "developers": ["MalikHw47", "TheRealIonIon"],
+    "developers": ["MalikHw47", "Ion Ion"],
     "description": "Selects all High Detail Mode objects in the working level.",
     "tags": ["editor", "utility"],
     "links": {
         "source": "https://github.com/MalikHw/FuckHighDetail",
         "community": "https://discord.gg/G9bZ92eg2n"
     },
-    "dependencies": {
-        "geode.node-ids": ">=v1.0.0"
-    },
     "resources": {
         "sprites": [
-            "prev/*.png"
+            "prev/*.jpg"
         ]
+    },
+    "settings": {
+        "enabled": {
+            "name": "Enable Mod",
+            "type": "bool",
+            "default": true
+        },
+        "keybind": {
+            "name": "Set Keybind",
+            "type": "keybind",
+            "default": "Ctrl+Shift+H",
+            "category": "editor",
+            "enable-if": "enabled"
+        }
     }
 }

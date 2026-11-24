@@ -1,5 +1,11 @@
+## v1.0.5
+- Updated to Geode V6
+- Added settings (and keybind)
+- Removed Node IDs dependency
+- Moved the button to the new floating window
+
 ## v1.0.4
-- quick visual bugfix
+- Quick visual bugfix
 
 ## v1.0.3
 - Added preview image

@@ -1,23 +1,24 @@
 #include <Geode/Geode.hpp>
-#include <Geode/modify/EditorPauseLayer.hpp>
+#include <Geode/modify/LevelEditorLayer.hpp>
+#include <Geode/modify/EditorCommandsPopup.hpp>
 
 using namespace geode::prelude;
 
-class $modify(MyEditorPauseLayer, EditorPauseLayer) {
-    void onSelectHDM(CCObject* sender) {
-        auto editor = LevelEditorLayer::get();
-        if (!editor || !editor->m_editorUI) return;
+class $modify(CustomEditorLayer, LevelEditorLayer) {
+    void selectHD() {
+        if (!Mod::get()->getSettingValue<bool>("enabled")) return;
+        if (!m_editorUI || !m_objects) return;
 
-        auto ui = editor->m_editorUI;
+        auto ui = m_editorUI;
         auto objs = CCArray::create();
 
-        for (auto obj : CCArrayExt<GameObject*>(editor->m_objects)) {
+        for (auto obj : CCArrayExt<GameObject*>(m_objects)) {
             if (obj->m_isHighDetail) objs->addObject(obj);
         }
 
         auto cnt = objs->count();
         std::string str = "object";
-        if (cnt > 1) str += "s";
+        if (cnt > 1) str.push_back('s');
 
         if (cnt > 0) {
             auto prev = CCArray::create();
@@ -33,7 +34,7 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
                 }
 
                 undo->m_objects->addObjectsFromArray(prev);
-                editor->m_undoObjects->addObject(undo);
+                m_undoObjects->addObject(undo);
             }
 
             ui->deselectAll();
@@ -41,53 +42,41 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
             ui->updateButtons();
             ui->updateDeleteButtons();
 
-            Notification::create(
-                fmt::format("Selected {} HD {}", cnt, str),
-                NotificationIcon::Success
-            )->show();
-        } else {
-            Notification::create("No HD objects found", NotificationIcon::Error)->show();
-        }
+            auto text = fmt::format("Selected {} HD {}", cnt, str);
+            Notification::create(text, NotificationIcon::Success)->show();
+        } else Notification::create("No HD objects found", NotificationIcon::Error)->show();
     }
 
-    bool init(LevelEditorLayer* lel) {
-        if (!EditorPauseLayer::init(lel)) return false;
-
-        if (auto menu = this->getChildByID("actions-menu")) {
-            auto spr = ButtonSprite::create("");
-            spr->setContentSize({56, 24});
-            spr->removeAllChildren();
-
-            auto label = CCLabelBMFont::create(
-                "Select All\nHigh Detail",
-                "bigFont.fnt"
-            );
-
-            label->setScale(0.25f);
-            label->setAnchorPoint({0.5f, 0.5f});
-            label->setPosition(spr->getContentSize() / 2 + ccp(0.5f, 1.0f));
-            spr->addChild(label);
-
-            auto bg = CCScale9Sprite::create("GJ_button_04.png");
-            bg->setContentSize({66, 30});
-            bg->setAnchorPoint({0.5f, 0.5f});
-            bg->setScale(0.81f);
-            bg->setPosition(spr->getContentSize() / 2);
-            spr->addChild(bg, -1);
-
-            auto btn = CCMenuItemSpriteExtra::create(
-                spr,
-                nullptr,
-                this,
-                menu_selector(MyEditorPauseLayer::onSelectHDM)
-            );
-
-            auto build = menu->getChildByID("build-helper-button");
-            btn->setID("select-all-hdm-btn");
-            menu->insertBefore(btn, build);
-            menu->updateLayout();
-        }
-
+    bool init(GJGameLevel* level, bool noUI) {
+        if (!LevelEditorLayer::init(level, noUI)) return false;
+        
+        this->addEventListener(
+            KeybindSettingPressedEventV3(Mod::get(), "keybind"),
+            [this](Keybind const& keybind, bool down, bool repeat, double timestamp) {
+                if (down && !repeat) selectHD();
+            }
+        );
+        
         return true;
+    }
+};
+
+class $modify(EditorToolsPopup, EditorCommandsPopup) {
+    void onCommand(CCObject* sender) {
+        auto button = typeinfo_cast<CCNode*>(sender)->getChildByIndex(0);
+        auto label = button->getChildByType<CCLabelBMFont>();
+
+        if (std::string(label->getString()) == "Select All High Detail") {
+            auto editor = LevelEditorLayer::get();
+            static_cast<CustomEditorLayer*>(editor)->selectHD();            
+        } else EditorCommandsPopup::onCommand(sender);
+    }
+
+    void onBuildWindowContent() {
+        EditorCommandsPopup::onBuildWindowContent();
+        if (!Mod::get()->getSettingValue<bool>("enabled")) return;
+
+        addCommandButton("Select All High Detail", static_cast<EditorCommand>(20));
+        layoutCommandButtons();
     }
 };
